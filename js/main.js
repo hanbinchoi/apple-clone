@@ -709,6 +709,8 @@
         }
     });
     window.addEventListener('load', () => {
+        
+        document.body.classList.remove('before-load');
         setLayout();
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0); // 처음 페이지가 로드되었을때 이미지가 나오게 하기 위함.
 
@@ -720,6 +722,8 @@
         sceneInfo[3].values.rectStartY = 0;
     });
     window.addEventListener('orientationchange', setLayout); // 모바일 기기 화면 바꿀때
-
+    document.querySelector('.loading').addEventListener('transitionend', (e) => {
+        document.body.removeChild(e.currentTarget);
+    })
     setCanvasImages();
 })();
