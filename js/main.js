@@ -589,7 +589,6 @@
                     // 캔버스가 브라우저 상단에 닿지 않으면 
                     step = 1;
                     objs.canvas.classList.remove('sticky');
-                    console.log(1);
                 } else {
                     // 상단에 닿으면 위로 올라오는 이미지 블렌드 처리
                     step = 2;
@@ -651,7 +650,15 @@
         // 현재 스크롤 위치가 이전 scene의 높이를 더한것들 보다 크면 scene의 위치를 +
         if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
             enterNewScene = true; // scene이 바뀌는 순간 true
-            currentScene++;
+
+            if (currentScene === sceneInfo.length-1) { // 마지막 씬에 숨겨진 텍스트 지우기
+                document.body.classList.add('scroll-effect-end');
+            }
+
+            if (currentScene < sceneInfo.length-1) { // scene3 까지만 currentScene 적용
+                currentScene++;
+            }
+            
             document.body.setAttribute('id', `show-scene-${currentScene}`);
         }
         // 현재 스크롤 위치가 이전 scene의 높이보다 작아지면 scene의 위치를 -
@@ -698,32 +705,62 @@
         }
     }
 
-    window.addEventListener('scroll', () => {
-        yOffset = window.pageYOffset;
-        scrollLoop();
-        checkMenu();
 
-        if (!rafState) {
-            rafId = requestAnimationFrame(loop);
-            rafState = true;
-        }
-    });
     window.addEventListener('load', () => {
-        
+
         document.body.classList.remove('before-load');
         setLayout();
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0); // 처음 페이지가 로드되었을때 이미지가 나오게 하기 위함.
 
-    });
-    window.addEventListener('resize', () => {
-        if(window.innerWidth > 600) {
-            setLayout();
+        // 새로고침 시 정확한 화면 출력하기 위해 조금 자동 스크롤
+        let tempYOffset = yOffset; // 현재 높이
+        let tempScrollCount = 0; // 스크롤 카운트 하기 위한 변수
+
+        if (yOffset > 0) {
+
+            let siId = setInterval(() => {
+                window.scrollTo(0, tempYOffset);
+                tempYOffset +=  5;
+    
+                if (tempScrollCount > 20) {
+                    clearInterval(siId);
+                }
+                tempScrollCount++;
+            }, 20);
+    
         }
-        sceneInfo[3].values.rectStartY = 0;
+
+        window.addEventListener('scroll', () => {
+            yOffset = window.pageYOffset;
+            scrollLoop();
+            checkMenu();
+
+            if (!rafState) {
+                rafId = requestAnimationFrame(loop);
+                rafState = true;
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) {
+                setLayout();
+                sceneInfo[3].values.rectStartY = 0;
+            }
+
+        });
+
+        window.addEventListener('orientationchange', () => {
+            scrollTo(0,0);
+            setTimeout(() => {
+                window.location.reload();
+            },500); // 모바일 기기 화면 바꿀때
+        }); 
+
+        // 로드가 끝나면 로딩화면 삭제
+        document.querySelector('.loading').addEventListener('transitionend', (e) => {
+            document.body.removeChild(e.currentTarget);
+        })
     });
-    window.addEventListener('orientationchange', setLayout); // 모바일 기기 화면 바꿀때
-    document.querySelector('.loading').addEventListener('transitionend', (e) => {
-        document.body.removeChild(e.currentTarget);
-    })
+
     setCanvasImages();
 })();
