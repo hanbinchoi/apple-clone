@@ -62,7 +62,6 @@ body.before-load {
     -webkit-backdrop-filter: saturate(180%) blur(15px);
     -moz-backdrop-filter: saturate(180%) blur(15px);
     -o-backdrop-filter: saturate(180%) blur(15px);
-
     backdrop-filter: saturate(180%) blur(15px);
 }
 
@@ -148,8 +147,8 @@ body.before-load {
     color: rgb(29, 29, 31);
 }
 
-.desc-message {
-    width: 50%;
+.sticky-elem .desc-message {
+    width: 45%;
     font-weight: bold;
     opacity: 0;
 }
@@ -197,9 +196,14 @@ body.before-load {
     align-items: center;
     height: 7rem;
     color: white;
-    background-color: orange;
+    background-color: darkorange;
 }
-
+.sticky-elem {
+    display: none;
+    position: fixed;
+    left: 0;
+    width: 100%;
+}
 #show-scene-0 #scroll-section-0 .sticky-elem,
 #show-scene-1 #scroll-section-1 .sticky-elem,
 #show-scene-2 #scroll-section-2 .sticky-elem,
@@ -208,14 +212,10 @@ body.before-load {
     will-change: transform, opacity;
 }
 .scroll-effect-end .sticky-elem {
+    /* 스크롤 효과가 모두 끝나고, 아래 일반 콘텐츠 영역에서는 sticky-elem들을 모두 안보이도록 */
     display: none !important;
 }
-.sticky-elem {
-    display: none;
-    position: fixed;
-    left: 0;
-    width: 100%;
-}
+
 
 .sticky-elem-canvas {
     top: 0;
@@ -227,16 +227,15 @@ body.before-load {
     top: 50%;
     left: 50%;
 }
-
-.image-blend-canvas.sticky {
-    top: 0;
-    position: fixed;
-}
-
 #scroll-section-3 {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.image-blend-canvas.sticky {
+    z-index: 10;
+    top: 0;
+    position: fixed;
 }
 
 .loading {
@@ -280,7 +279,7 @@ body.before-load {
 .loading-circle circle {
     stroke: black;
     stroke-width: 4;
-    stroke-dasharray: 157;
+    stroke-dasharray: 157 157;
     stroke-dashoffset: 0;
     fill: transparent;
     animation: loading-circle-ani 1s infinite;
@@ -315,15 +314,14 @@ body.before-load {
     .main-message small {
         font-size: 1.5vw;
     }
-
-    .desc-message {
+    .sticky-elem.desc-message{
         width: 20%;
-        font-weight: bold;
     }
+
 
     #scroll-section-2 .b {
         top: 20%;
-        left: 40%;
+        left: 53%;
     }
 
 

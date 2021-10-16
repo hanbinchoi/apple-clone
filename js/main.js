@@ -708,6 +708,7 @@
 
     window.addEventListener('load', () => {
 
+        setLayout(); // 중간에 새로고침 시, 콘텐츠 양에 따라 높이 계산에 오차가 발생하는 경우를 방지하기 위해
         document.body.classList.remove('before-load');
         setLayout();
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0); // 처음 페이지가 로드되었을때 이미지가 나오게 하기 위함.
